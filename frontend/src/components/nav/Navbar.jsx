@@ -20,10 +20,13 @@ import {
   Menu,
   Close,
 } from "@mui/icons-material";
+import EventIcon from "@mui/icons-material/Event";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "../.././redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "../theme/FlexBetween";
+import DateSelect from "../date-select/DateSelect";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -31,15 +34,17 @@ const Navbar = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
   const dark = theme.palette.neutral.dark;
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
-
   const fullName = `${user.firstName} ${user.lastName}`;
+
+  const [toggle, setToggle] = useState(false);
+
+
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -48,7 +53,7 @@ const Navbar = () => {
           fontWeight="bold"
           fontSize="clamp(1rem, 2rem, 2.25rem)"
           color="primary"
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/")}
           sx={{
             "&:hover": {
               color: primaryLight,
@@ -76,6 +81,13 @@ const Navbar = () => {
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
+
+         
+          {toggle && (
+            <DateSelect />
+          )}
+           <EventIcon sx={{ fontSize: "25px" }} onClick={() => setToggle(!toggle)}/>
+
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
@@ -83,9 +95,9 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
           </IconButton>
-          <Message sx={{ fontSize: "25px" }} />
-          <Notifications sx={{ fontSize: "25px" }} />
-          <Help sx={{ fontSize: "25px" }} />
+          {/* <Notifications sx={{ fontSize: "25px" }} />
+          <Help sx={{ fontSize: "25px" }} /> */}
+          <SettingsIcon sx={{ fontSize: "25px" }} />
           <FormControl variant="standard" value={fullName}>
             <Select
               value={fullName}
