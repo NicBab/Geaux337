@@ -15,12 +15,11 @@ import {
   Message,
   DarkMode,
   LightMode,
-  Notifications,
-  Help,
   Menu,
   Close,
 } from "@mui/icons-material";
 import EventIcon from "@mui/icons-material/Event";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "../.././redux/authSlice";
 import { useNavigate } from "react-router-dom";
@@ -41,10 +40,15 @@ const Navbar = () => {
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
   const fullName = `${user.firstName} ${user.lastName}`;
+  const [calender, setCalender] = useState(false);
 
-  const [toggle, setToggle] = useState(false);
+  const userSettingsClick = () => {
+    navigate("/settings")
+  };
 
-
+  const heartClick = () => {
+    navigate("/favorites")
+  }
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -67,7 +71,7 @@ const Navbar = () => {
           <FlexBetween
             backgroundColor={neutralLight}
             borderRadius="9px"
-            gap="3rem"
+            gap="2rem"
             padding="0.1rem 1.5rem"
           >
             <InputBase placeholder="Search..." />
@@ -82,12 +86,14 @@ const Navbar = () => {
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
 
-         
-          {toggle && (
-            <DateSelect />
-          )}
-           <EventIcon sx={{ fontSize: "25px" }} onClick={() => setToggle(!toggle)}/>
-
+        {/*ICONS*/}
+          {calender && <DateSelect />}
+          <EventIcon
+            sx={{ fontSize: "25px", cursor: "pointer" }}
+            onClick={() => setCalender(!calender)}
+          />
+          <FavoriteIcon sx={{ fontSize: "25px", cursor: "pointer" }} onClick={heartClick} />
+          <SettingsIcon sx={{ fontSize: "25px", cursor: "pointer" }} onClick={userSettingsClick}/>
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
@@ -95,10 +101,9 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
           </IconButton>
-          {/* <Notifications sx={{ fontSize: "25px" }} />
-          <Help sx={{ fontSize: "25px" }} /> */}
-          <SettingsIcon sx={{ fontSize: "25px" }} />
+          
           <FormControl variant="standard" value={fullName}>
+            {/*USER DROPDOWN*/}
             <Select
               value={fullName}
               sx={{

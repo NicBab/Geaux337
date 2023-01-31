@@ -28,8 +28,14 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
+    events: {
+        type: Array,
+        default: [],
+    },
+    location: String,
     impressions: Number,
 }, { timestamps: true });
 
 const User = mongoose.model("User", UserSchema)
+
 export default User;
