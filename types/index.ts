@@ -1,10 +1,10 @@
 // ====== USER PARAMS
 export type CreateUserParams = {
     clerkId: string;
+    email: string;
     userName: string;
     firstName: string;
     lastName: string;
-    email: string;
     photo: string;
   }
   
