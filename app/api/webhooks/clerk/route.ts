@@ -50,57 +50,71 @@ export async function POST(req: Request) {
     })
   }
  
-  // Get the ID and type
-  const eventType = evt.type;
- 
-  if(eventType === 'user.created') {
-    const { id, email_addresses, image_url, first_name, last_name, username } = evt.data;
+ // Get the ID and type
+ const { id } = evt.data;
+ const eventType = evt.type;
 
-    const user = {
-      clerkId: id,
-      email: email_addresses[0].email_address,
-      userName: username!,
-      firstName: first_name!,
-      lastName: last_name!,
-      photo: image_url,
-    }
+ // CREATE User in mongodb
+ if (eventType === "user.created") {
+   const { id, email_addresses, image_url, first_name, last_name, username } =
+     evt.data;
 
-    const newUser = await createUser(user);
+   const user = {
+     clerkId: id,
+     email: email_addresses[0].email_address,
+     userName: username!,
+     firstName: first_name!,
+     lastName: last_name!,
+     photo: image_url,
+   };
 
-    if(newUser) {
-      await clerkClient.users.updateUserMetadata(id, {
-        publicMetadata: {
-          userId: newUser._id
-        }
-      })
-    }
+   console.log(user);
 
-    return NextResponse.json({ message: 'OK', user: newUser })
-  }
+   const newUser = await createUser(user);
 
-  if (eventType === 'user.updated') {
-    const {id, image_url, first_name, last_name, username } = evt.data
+   if (newUser) {
+     await clerkClient.users.updateUserMetadata(id, {
+       publicMetadata: {
+         userId: newUser._id,
+       },
+     });
+   }
 
-    const user = {
-      firstName: first_name!,
-      lastName: last_name!,
-      userName: username!,
-      photo: image_url,
-    }
+   return NextResponse.json({ message: "New user created", user: newUser });
+ }
 
-    const updatedUser = await updateUser(id, user)
+ console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
+ console.log("Webhook body:", body);
 
-    return NextResponse.json({ message: 'OK', user: updatedUser })
-  }
-
-  if (eventType === 'user.deleted') {
-    const { id } = evt.data
-
-    const deletedUser = await deleteUser(id!)
-
-    return NextResponse.json({ message: 'OK', user: deletedUser })
-  }
- 
-  return new Response('', { status: 200 })
+ return new Response("", { status: 200 });
 }
+
+
+
+
+//   if (eventType === 'user.updated') {
+//     const {id, image_url, first_name, last_name, username } = evt.data
+
+//     const user = {
+//       firstName: first_name!,
+//       lastName: last_name!,
+//       userName: username!,
+//       photo: image_url,
+//     }
+
+//     const updatedUser = await updateUser(id, user)
+
+//     return NextResponse.json({ message: 'OK', user: updatedUser })
+//   }
+
+//   if (eventType === 'user.deleted') {
+//     const { id } = evt.data
+
+//     const deletedUser = await deleteUser(id!)
+
+//     return NextResponse.json({ message: 'OK', user: deletedUser })
+//   }
+ 
+//   return new Response('', { status: 200 })
+// }
  
