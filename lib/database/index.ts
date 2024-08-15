@@ -30,16 +30,18 @@ export const connectToDatabase = async () => {
       dbName: "geaux337app",
     };
 
-    cached.promise = cached.promise || mongoose
-      .connect(MONGODB_URI as string, opts)
-      .then((mongoose) => {
-        console.log("MongoDB connected");
-        return mongoose;
-      })
-      .catch((error) => {
-        console.error("MongoDB connection error:", error);
-        throw error;
-      });
+    cached.promise =
+      cached.promise ||
+      mongoose
+        .connect(MONGODB_URI as string, opts)
+        .then((mongoose) => {
+          console.log("MongoDB connected");
+          return mongoose;
+        })
+        .catch((error) => {
+          console.error("MongoDB connection error:", error);
+          throw error;
+        });
   }
 
   try {
