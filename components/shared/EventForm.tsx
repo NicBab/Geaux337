@@ -17,9 +17,8 @@ import { useUploadThing } from '@/lib/uploadthing'
 import "react-datepicker/dist/react-datepicker.css";
 import { Checkbox } from "../ui/checkbox"
 import { useRouter } from "next/navigation"
-// import { createEvent, updateEvent } from "@/lib/actions/event.actions"
 import { IEvent } from "@/lib/database/models/event.model"
-import { createEvent } from "@/lib/actions/event.actions"
+import { createEvent, updateEvent } from "@/lib/actions/event.actions"
 
 
 type EventFormProps = {
@@ -38,6 +37,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
       endDateTime: new Date(event.endDateTime) 
     }
     : eventDefaultValues;
+    
   const router = useRouter();
 
   const { startUpload } = useUploadThing('imageUploader')
@@ -77,27 +77,27 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
       }
     }
 
-    // if(type === 'Update') {
-    //   if(!eventId) {
-    //     router.back()
-    //     return;
-    //   }
+    if(type === 'Update') {
+      if(!eventId) {
+        router.back()
+        return;
+      }
 
-    //   try {
-    //     const updatedEvent = await updateEvent({
-    //       userId,
-    //       event: { ...values, imageUrl: uploadedImageUrl, _id: eventId },
-    //       path: `/events/${eventId}`
-    //     })
+      try {
+        const updatedEvent = await updateEvent({
+          userId,
+          event: { ...values, imageUrl: uploadedImageUrl, _id: eventId },
+          path: `/events/${eventId}`
+        })
 
-    //     if(updatedEvent) {
-    //       form.reset();
-    //       router.push(`/events/${updatedEvent._id}`)
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
+        if(updatedEvent) {
+          form.reset();
+          router.push(`/events/${updatedEvent._id}`)
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
   return (
